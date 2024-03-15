@@ -15,7 +15,6 @@ def results():
         form_data = request.form
         monster_name = form_data.get('monster')
         search_results = monster_search(monster_name)
-        print(search_results)
         return render_template('results.html', results=search_results)
     else:
         return 'Wrong HTTP method', 400

@@ -17,7 +17,7 @@ DND_API_BASE_URL = 'https://www.dnd5eapi.co/api/'
 def create_dnd_api_url(imput):
     lower_imput = imput.lower()
     final_imput = lower_imput.replace(' ', '-')
-    return(str(DND_API_BASE_URL) + 'monsters/' + str(final_imput))
+    return str(DND_API_BASE_URL) + 'monsters/' + str(final_imput)
 
 
 def get_api_data(url):
@@ -313,9 +313,7 @@ def monster_search(monster):
             for ability in abilities:
                 abilities_str = abilities_str + ability + ', '
             results['Abilities'] = abilities_str + final_ability_str
-    print(results)
     return results
-
 
 
 def main():
