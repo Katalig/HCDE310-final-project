@@ -59,10 +59,8 @@ def create_parsed_monster_data_dictionary(unparsed_data):
     # print(parsed_data)
     parsed_dict = {'name': parsed_data['name'],
                    'creature-type': parsed_data['type'],
+                   'speeds': parsed_data['speed'],
                    'alignment': parsed_data['alignment'],
-                   'cr': parsed_data['challenge_rating'],
-                   'languages': parsed_data['languages'],
-                   'hp': parsed_data['hit_points'],
                    'AC': parsed_data['armor_class'][0]['value'],
                    'str': parsed_data['strength'],
                    'dex': parsed_data['dexterity'],
@@ -80,18 +78,6 @@ def create_parsed_monster_data_dictionary(unparsed_data):
         condition_immunity_lst.append(condition['name'])
     parsed_dict['condition-immune'] = condition_immunity_lst
 
-    monster_profs = parsed_data['proficiencies']
-    for prof in monster_profs:
-        parsed_dict[prof['proficiency']['name']] = prof['value']
-
-    monster_speeds = parsed_data['speed']
-    for speed in monster_speeds:
-        parsed_dict[speed] = monster_speeds[speed]
-
-    monster_senses = parsed_data['senses']
-    for sense in monster_senses:
-        parsed_dict[sense] = monster_senses[sense]
-
     monster_abilities = parsed_data['special_abilities']
     ability_lst = []
     for ability in monster_abilities:
@@ -103,11 +89,188 @@ def create_parsed_monster_data_dictionary(unparsed_data):
 def monster_search(monster):
     url = create_dnd_api_url(monster)
     data = get_api_data(url)
-    results = []
+    results = {}
     if data is None:
         return results
-    parsed_data = create_parsed_monster_data_dictionary(data)
-    return parsed_data
+    worked_data = create_parsed_monster_data_dictionary(data)
+    print(worked_data)
+
+    results['Name'] = worked_data['name']
+
+    results['Creature Type'] = str(worked_data['creature-type']).capitalize()
+
+    movement = worked_data['speeds']
+    walk_speed = int(str(movement['walk']).split()[0])
+    if walk_speed < 30:
+        walk_pace_str = 'on the ground this creature cannot keep pace with a commoner'
+    elif walk_speed > 30:
+        walk_pace_str = 'on the ground this creature outpaces a commoner'
+    else:
+        walk_pace_str = 'on the ground this creature keeps pace with a commoner'
+    del movement['walk']
+    if len(movement) > 0:
+        other_movement_str = 'This creature can '
+        for speed in movement.keys():
+            other_movement_str = other_movement_str + str(speed) + ', '
+        results['Movement Speed'] = other_movement_str + 'and ' + walk_pace_str
+    else:
+        results['Movement Speed'] = walk_pace_str.capitalize()
+
+    alignment = worked_data['alignment']
+    if 'lawful' in alignment:
+        if 'good' in alignment:
+            results['Alignment'] = 'This creature is inclined towards Good and Order'
+        if 'evil' in alignment:
+            results['Alignment'] = 'This creature is inclined towards Evil and Order'
+        else:
+            results['Alignment'] = 'This creature is inclined towards Law and Order'
+    elif 'chaotic' in alignment:
+        if 'good' in alignment:
+            results['Alignment'] = 'This creature is inclined towards Good and Impulsiveness'
+        if 'evil' in alignment:
+            results['Alignment'] = 'This creature is inclined towards Evil and Impulsiveness'
+        else:
+            results['Alignment'] = 'This creature is inclined towards Chaos and Impulsiveness'
+    elif 'good' in alignment:
+        results['Alignment'] = 'This creature is inclined towards Good and Selflessness'
+    elif 'evil' in alignment:
+        results['Alignment'] = 'This creature is inclined towards Evil and Selfishness'
+    elif 'non-good' in alignment:
+        results['Alignment'] = 'This creature acts against the forces of good'
+    elif 'non-lawful' in alignment:
+        results['Alignment'] = 'This creature acts against the forces of law'
+    elif 'non-evil' in alignment:
+        results['Alignment'] = 'This creature acts against the forces of evil'
+    elif 'non-chaotic' in alignment:
+        results['Alignment'] = 'This creature acts against the forces of chaos'
+    elif 'unaligned' in alignment:
+        results['Alignment'] = 'This creature does not function on the alignment spectrum'
+    else:
+        results['Alignment'] = 'This creature is neutrally inclined and does not embody any extremes'
+
+    armor_class = worked_data['AC']
+    if armor_class <= 10:
+        results['Armor Class'] = 'This creature is very susceptible to direct attacks'
+    elif armor_class <= 15:
+        results['Armor Class'] = 'This creature is reasonably susceptible to direct attacks'
+    elif armor_class <= 20:
+        results['Armor Class'] = 'This creature is not very susceptible to direct attacks'
+    elif armor_class <= 25:
+        results['Armor Class'] = 'This creature is remarkably not susceptible to direct attacks'
+    else:
+        results['Armor Class'] = 'This creature is practically impenetrable'
+
+    strength = worked_data['str']
+    if strength <= 5:
+        results['Strength'] = 'This creature has very low strength'
+    elif strength <= 10:
+        results['Strength'] = 'This creature has the strength of an average commoner'
+    elif strength <= 15:
+        results['Strength'] = 'This creature has decent strength'
+    elif strength <= 20:
+        results['Strength'] = 'This creature has great strength'
+    elif strength <= 25:
+        results['Strength'] = 'This creature has remarkable inhuman strength!'
+    else:
+        results['Strength'] = 'This creature has unmatched incredible strength!!!'
+
+    dexterity = worked_data['dex']
+    if dexterity <= 5:
+        results['Dexterity'] = 'This creature has very low dexterity'
+    elif dexterity <= 10:
+        results['Dexterity'] = 'This creature has the dexterity of an average commoner'
+    elif dexterity <= 15:
+        results['Dexterity'] = 'This creature has decent dexterity'
+    elif dexterity <= 20:
+        results['Dexterity'] = 'This creature has great dexterity'
+    elif dexterity <= 25:
+        results['Dexterity'] = 'This creature has remarkable inhuman dexterity!'
+    else:
+        results['Dexterity'] = 'This creature has unmatched incredible dexterity!!!'
+
+    constitution = worked_data['con']
+    if constitution <= 5:
+        results['Constitution'] = 'This creature has very low constitution'
+    elif constitution <= 10:
+        results['Constitution'] = 'This creature has the constitution of an average commoner'
+    elif constitution <= 15:
+        results['Constitution'] = 'This creature has decent constitution'
+    elif constitution <= 20:
+        results['Constitution'] = 'This creature has great constitution'
+    elif constitution <= 25:
+        results['Constitution'] = 'This creature has remarkable inhuman constitution!'
+    else:
+        results['Constitution'] = 'This creature has unmatched incredible constitution!!!'
+
+    intelligence = worked_data['int']
+    if intelligence <= 5:
+        results['Intelligence'] = 'This creature has very low intelligence'
+    elif intelligence <= 10:
+        results['Intelligence'] = 'This creature has the intelligence of an average commoner'
+    elif intelligence <= 15:
+        results['Intelligence'] = 'This creature has decent intelligence'
+    elif intelligence <= 20:
+        results['Intelligence'] = 'This creature has great intelligence'
+    elif intelligence <= 25:
+        results['Intelligence'] = 'This creature has remarkable inhuman intelligence!'
+    else:
+        results['Intelligence'] = 'This creature has unmatched incredible intelligence!!!'
+
+    wisdom = worked_data['wis']
+    if wisdom <= 5:
+        results['Wisdom'] = 'This creature has very low wisdom'
+    elif wisdom <= 10:
+        results['Wisdom'] = 'This creature has the wisdom of an average commoner'
+    elif wisdom <= 15:
+        results['Wisdom'] = 'This creature has decent wisdom'
+    elif wisdom <= 20:
+        results['Wisdom'] = 'This creature has great wisdom'
+    elif wisdom <= 25:
+        results['Wisdom'] = 'This creature has remarkable inhuman wisdom!'
+    else:
+        results['Wisdom'] = 'This creature has unmatched incredible wisdom!!!'
+
+    charisma = worked_data['cha']
+    if charisma <= 5:
+        results['Charisma'] = 'This creature has very low charisma'
+    elif charisma <= 10:
+        results['Charisma'] = 'This creature has the charisma of an average commoner'
+    elif charisma <= 15:
+        results['Charisma'] = 'This creature has decent charisma'
+    elif charisma <= 20:
+        results['Charisma'] = 'This creature has great charisma'
+    elif charisma <= 25:
+        results['Charisma'] = 'This creature has remarkable inhuman charisma!'
+    else:
+        results['Charisma'] = 'This creature has unmatched incredible charisma!!!'
+
+    vulnerabilities = worked_data['vulnerable']
+    if len(vulnerabilities) != 0:
+        results['Damage Vulnerabilities'] = vulnerabilities[0]
+    else:
+        results['Damage Vulnerabilities'] = 'None'
+
+    resistances = worked_data['resistant']
+    if len(resistances) != 0:
+        results['Damage Resistances'] = resistances[0]
+    else:
+        results['Damage Resistances'] = 'None'
+
+    damage_immunities = worked_data['dmg-immune']
+    if len(damage_immunities) != 0:
+        results['Damage Immunities'] = damage_immunities[0]
+    else:
+        results['Damage Immunities'] = 'None'
+
+    condition_immunities = worked_data['condition-immune']
+    if len(condition_immunities) != 0:
+        results['Condition Immunities'] = condition_immunities[0]
+    else:
+        results['Condition Immunities'] = 'None'
+
+    results['Abilities'] = worked_data['abilities']
+
+    return results
 
 
 
@@ -117,7 +280,7 @@ def main():
     data = get_api_data(url)
     parsed_data = create_parsed_monster_data_dictionary(data)
     print(parsed_data)'''
-    print(monster_search('adult black dragon'))
+    print(monster_search('cult fanatic'))
 
 
 if __name__ == "__main__":
