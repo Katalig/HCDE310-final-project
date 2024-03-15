@@ -90,7 +90,6 @@ def monster_search(monster):
     if data is None:
         return results
     worked_data = create_parsed_monster_data_dictionary(data)
-    print(worked_data)
 
     results['Name'] = worked_data['name']
 
