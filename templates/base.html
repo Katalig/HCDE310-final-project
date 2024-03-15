@@ -3,21 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Search local Wikipedia articles{% endblock %}</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS file -->
+    <title>{% block title %}Monster Fighting Helper{% endblock %}</title>
+    <style>
+        body {
+            background-color: #fff0f0; /* Blue background color */
+            color: #333; /* Text color */
+            font-family: Arial, sans-serif; /* Font family */
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #d62b2b; /* Header background color */
+            color: #fff; /* Header text color */
+            text-align: center;
+            font-size: 20px;
+            padding: 1px 0;
+        }
+        main {
+            color: #000; /* main text color */
+            text-align: center;
+            font-size: 24px;
+            position: absolute;
+            top: 47%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            margin: 0px;
+
+        }
+    </style>
 </head>
 <body>
     <header>
-        <h1>Search local Wikipedia articles</h1>
+        <div align="center">
+        <h1>Need Help Fighting A Monster?</h1>
+            </div>
     </header>
 
     <main>
+        <div align="center">
         {% block content %}
         {% endblock %}
+            </div>
     </main>
 
-    <footer>
-        <p>Data from <a href="https://www.wikipedia.org/">Wikipedia</a> and <a href="https://www.openstreetmap.org/">OpenStreetMap</a>.</p>
-    </footer>
 </body>
 </html>

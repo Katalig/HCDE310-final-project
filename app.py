@@ -1,4 +1,4 @@
-from functions import wikipedia_locationsearch
+import functions
 
 from flask import Flask, render_template, request
 
