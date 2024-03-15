@@ -28,7 +28,7 @@ def get_api_data(url):
         data = requested_url.read()
         return data
     except IOError:
-        return {'error': 'HTTP error occurred'}
+        return None
 
 #
 # wikipedia_locationsearch(place, max_results=10, radius=2.0, sort=False)
@@ -56,7 +56,7 @@ def get_api_data(url):
 #
 def create_parsed_monster_data_dictionary(unparsed_data):
     parsed_data = json.loads(unparsed_data)
-    print(parsed_data)
+    # print(parsed_data)
     parsed_dict = {'name': parsed_data['name'],
                    'creature-type': parsed_data['type'],
                    'alignment': parsed_data['alignment'],
@@ -100,29 +100,24 @@ def create_parsed_monster_data_dictionary(unparsed_data):
 
     return parsed_dict
 
-'''def wikipedia_locationsearch(place, max_results=10, radius=2.0, sort=False):
+def monster_search(monster):
+    url = create_dnd_api_url(monster)
+    data = get_api_data(url)
     results = []
-    coordinates = geocode(place)
-    if not coordinates:
+    if data is None:
         return results
-    search_query = wikipedia.geosearch(latitude = coordinates[0],
-                                       longitude = coordinates[1],
-                                       results=max_results, radius=round(radius*1609))
-    for title in search_query:
-        page = wikipedia.page(title)
-        results.append(page)
-    if sort:
-        results.sort(key=lambda x: len(x.content))
-    return results'''
+    parsed_data = create_parsed_monster_data_dictionary(data)
+    return parsed_data
 
 
 
 ## Code to test your function follows follows
 def main():
-    url = create_dnd_api_url('animated armor')
+    '''url = create_dnd_api_url('animated armor')
     data = get_api_data(url)
     parsed_data = create_parsed_monster_data_dictionary(data)
-    print(parsed_data)
+    print(parsed_data)'''
+    print(monster_search('adult black dragon'))
 
 
 if __name__ == "__main__":

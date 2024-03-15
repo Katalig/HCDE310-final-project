@@ -12,14 +12,21 @@
 {% block title %}Search Results{% endblock %}
 
 {% block content %}
-    <h2>Search Results for "{{ place }}"</h2>
+    <style>
+        main {
+            color: #000; /* main text color */
+            text-align: center;
+            font-size: 24px;
+            margin: 0px;
 
+        }
+   </style>
     {% if results|length == 0 %}
-        <p>No results found for the search term.</p>
+        <p>No results found for this monster. Please make sure you spelt it correctly</p>
     {% else %}
+
         {% for result in results %}
-            <h3><a href="{{ result.url }}">{{ result.title }}</a></h3>
-            <p>{{ result.summary }}</p>
+            <h3><a> {{ result }}: {{ results[result] }} </a></h3>
         {% endfor %}
     {% endif %}
 {% endblock %}

@@ -1,15 +1,28 @@
 <!-- Template containing the form  -->
 {% extends "base.html" %}
 
-{% block title %}Search Wikipedia{% endblock %}
+{% block title %}Prompt Monster{% endblock %}
 
 {% block content %}
+   <style>
+        main {
+            color: #000; /* main text color */
+            text-align: center;
+            font-size: 24px;
+            position: absolute;
+            top: 47%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            margin: 0px;
+
+        }
+   </style>
     <h3><td height="500px"><img src="https://upload.wikimedia.org/wikipedia/en/8/8e/Dungeons_%26_Dragons_5th_Edition_logo.svg" width="500px"/></td>
 <td></h3>
     <h2>We'll give you the rundown on the dos and don'ts</h2>
     <form action="/results" method="POST">
-        <label for="place">Monster Name:</label>
-        <input type="text" id="place" name="place" required>
+        <label for="monster">Monster Name:</label>
+        <input type="text" id="monster" name="monster" required>
         <button type="submit">Search</button>
     </form>
 {% endblock %}

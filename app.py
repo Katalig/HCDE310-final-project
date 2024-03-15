@@ -1,4 +1,4 @@
-import functions
+from functions import monster_search
 
 from flask import Flask, render_template, request
 
@@ -17,12 +17,10 @@ def index():
 def results():
     if request.method == 'POST':
         form_data = request.form
-        max_results = int(form_data.get('max_results', 10))
-        radius = float(form_data.get('radius', 2.0))
-        place = form_data.get('place')
-        sort = form_data.get('sort')
-        search_results = wikipedia_locationsearch(place, max_results, radius, sort)
-        return render_template('results.html', place=place, results=search_results)
+        monster_name = form_data.get('monster')
+        search_results = monster_search(monster_name)
+        print(search_results)
+        return render_template('results.html', monster=monster_name, results=search_results)
     else:
         return 'Wrong HTTP method', 400
 
