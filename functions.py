@@ -246,29 +246,40 @@ def monster_search(monster):
 
     vulnerabilities = worked_data['vulnerable']
     if len(vulnerabilities) != 0:
-        results['Damage Vulnerabilities'] = vulnerabilities[0]
+        results['Damage Vulnerabilities'] = str(vulnerabilities[0]).capitalize()
     else:
         results['Damage Vulnerabilities'] = 'None'
 
     resistances = worked_data['resistant']
     if len(resistances) != 0:
-        results['Damage Resistances'] = resistances[0]
+        results['Damage Resistances'] = str(resistances[0]).capitalize()
     else:
         results['Damage Resistances'] = 'None'
 
     damage_immunities = worked_data['dmg-immune']
     if len(damage_immunities) != 0:
-        results['Damage Immunities'] = damage_immunities[0]
+        results['Damage Immunities'] = str(damage_immunities[0]).capitalize()
     else:
         results['Damage Immunities'] = 'None'
 
     condition_immunities = worked_data['condition-immune']
     if len(condition_immunities) != 0:
-        results['Condition Immunities'] = condition_immunities[0]
+        results['Condition Immunities'] = str(condition_immunities[0]).capitalize()
     else:
         results['Condition Immunities'] = 'None'
 
-    results['Abilities'] = worked_data['abilities']
+    abilities = worked_data['abilities']
+    if len(abilities) > 0:
+        if len(abilities) == 1:
+            results['Abilities'] = 'This creature has the following ability: ' + abilities[0]
+        else:
+            abilities_str = 'This creature also has the following abilities: '
+            final_ability = abilities[-1]
+            final_ability_str = 'and ' + str(final_ability)
+            abilities.remove(final_ability)
+            for ability in abilities:
+                abilities_str = abilities_str + ability + ', '
+            results['Abilities'] = abilities_str + final_ability_str
 
     return results
 
@@ -280,7 +291,7 @@ def main():
     data = get_api_data(url)
     parsed_data = create_parsed_monster_data_dictionary(data)
     print(parsed_data)'''
-    print(monster_search('cult fanatic'))
+    print(monster_search('adult black dragon'))
 
 
 if __name__ == "__main__":

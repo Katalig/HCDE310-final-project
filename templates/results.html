@@ -13,20 +13,118 @@
 
 {% block content %}
     <style>
-        main {
-            color: #000; /* main text color */
-            text-align: center;
-            font-size: 24px;
-            margin: 0px;
-
+        body {
+            margin: 0;
+            padding: 0;
         }
-   </style>
-    {% if results|length == 0 %}
-        <p>No results found for this monster. Please make sure you spelt it correctly</p>
-    {% else %}
 
-        {% for result in results %}
-            <h3><a> {{ result }}: {{ results[result] }} </a></h3>
-        {% endfor %}
+        .container {
+            max-width: calc(100% - 60px);
+            margin: 0 auto;
+            overflow: hidden;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start; /* Align sections from the start */
+        }
+
+        /* For 3 sections */
+        .section-3 {
+            width: calc(33.33% - 20px);
+        }
+
+        /* For 4 sections */
+        .section-4 {
+            width: calc(25% - 20px);
+        }
+
+        .section {
+            margin: 10px;
+            box-sizing: border-box;
+            padding: 20px;
+            border: 1px solid black;
+            text-align: center;
+        }
+    </style>
+    {% if results|length == 0 %}
+            <p>No results found for this monster. Please make sure you spelt it correctly</p>
+         {% else %}
+            <p style="font-size: 40px; margin: 10px;"> <u>{{ results['Name'] }}</u> </p>
+            <div class="container">
+                <div class="section section-4">
+                    <h2>Creature Type</h2>
+                    <p>{{ results['Creature Type'] }}</p>
+                </div>
+
+                <div class="section section-4">
+                    <h2>Movement Speed</h2>
+                    <p>{{ results['Movement Speed'] }}</p>
+                </div>
+
+                <div class="section section-4">
+                    <h2>Alignment</h2>
+                    <p>{{ results['Alignment'] }}</p>
+                </div>
+
+                <div class="section section-4">
+                    <h2>Defense Against Attacks</h2>
+                    <p>{{ results['Armor Class'] }}</p>
+                </div>
+
+
+
+                <div class="section section-3">
+                    <h2>Strength</h2>
+                    <p>{{ results['Strength'] }}</p>
+                </div>
+
+                <div class="section section-3">
+                    <h2>Dexterity</h2>
+                    <p>{{ results['Dexterity'] }}</p>
+                </div>
+
+                <div class="section section-3">
+                    <h2>Constitution</h2>
+                    <p>{{ results['Constitution'] }}</p>
+                </div>
+                <div class="section section-3">
+                    <h2>Intelligence</h2>
+                    <p>{{ results['Intelligence'] }}</p>
+                </div>
+
+                <div class="section section-3">
+                    <h2>Wisdom</h2>
+                    <p>{{ results['Wisdom'] }}</p>
+                </div>
+
+                <div class="section section-3">
+                    <h2>Charisma</h2>
+                    <p>{{ results['Charisma'] }}</p>
+                </div>
+
+
+
+
+                <div class="section section-4">
+                    <h2>Vulnerabilities</h2>
+                    <p>{{ results['Damage Vulnerabilities'] }}</p>
+                </div>
+
+                <div class="section section-4">
+                    <h2>Resistances</h2>
+                    <p>{{ results['Damage Resistances'] }}</p>
+                </div>
+
+                <div class="section section-4">
+                    <h2>Damage Immunities</h2>
+                    <p>{{ results['Damage Immunities'] }}</p>
+                </div>
+
+                <div class="section section-4">
+                    <h2>Condition Immunities</h2>
+                    <p>{{ results['Condition Immunities'] }}</p>
+                </div>
+                <p style="font-size: 20px; margin: 10px;"> {{ results['Abilities'] }} </p>
+            </div>
+        </div>
     {% endif %}
 {% endblock %}
