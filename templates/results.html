@@ -1,0 +1,25 @@
+<!-- Template for showing the results. -->
+
+<!-- 
+    If you are not sure how to loop through
+    a list inside a template, take a look at
+    the first example in this page:
+    https://palletsprojects.com/p/jinja/
+-->
+
+{% extends "base.html" %}
+
+{% block title %}Search Results{% endblock %}
+
+{% block content %}
+    <h2>Search Results for "{{ place }}"</h2>
+
+    {% if results|length == 0 %}
+        <p>No results found for the search term.</p>
+    {% else %}
+        {% for result in results %}
+            <h3><a href="{{ result.url }}">{{ result.title }}</a></h3>
+            <p>{{ result.summary }}</p>
+        {% endfor %}
+    {% endif %}
+{% endblock %}

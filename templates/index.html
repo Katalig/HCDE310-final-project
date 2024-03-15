@@ -1,0 +1,23 @@
+<!-- Template containing the form  -->
+{% extends "base.html" %}
+
+{% block title %}Search Wikipedia{% endblock %}
+
+{% block content %}
+    <h2>Search Wikipedia</h2>
+    <form action="/results" method="POST">
+        <label for="place">Place Name:</label>
+        <input type="text" id="place" name="place" required><br><br>
+
+        <label for="max_results">Max Results:</label>
+        <input type="number" id="max_results" name="max_results" value="10"><br><br>
+
+        <label for="radius">Search Radius:</label>
+        <input type="number" id="radius" name="radius" value="2"><br><br>
+
+        <input type="checkbox" id="sort" name="sort">
+        <label for="sort">Sort results (longest article first)?</label><br><br>
+
+        <button type="submit">Search</button>
+    </form>
+{% endblock %}
