@@ -3,7 +3,6 @@ import json
 
 DND_API_BASE_URL = 'https://www.dnd5eapi.co/api/'
 
-#
 # create_monster_api_url(place)
 #
 # Parameters:
@@ -14,7 +13,6 @@ DND_API_BASE_URL = 'https://www.dnd5eapi.co/api/'
 # Returns:
 #
 # string that contains the url for a specific monster in the dnd api.
-# 
 #
 def create_dnd_api_url(imput):
     lower_imput = imput.lower()
@@ -30,33 +28,20 @@ def get_api_data(url):
     except IOError:
         return None
 
-#
-# wikipedia_locationsearch(place, max_results=10, radius=2.0, sort=False)
+
+# create_parsed_monster_data_dictionary(unparsed_data)
 #
 # Parameters
 # 
-# * place: A string that denotes the name of a place, or an address (e.g., 
-#          "University of Washington" or "1410 NE Campus Parkway, Seattle, WA 
-#          98195") around which the search results should be returned.
-# * max_results: An integer that denotes the maximum number of results that 
-#                should be returned by the function. 
-#                Default value: 10.
-# * radius: A float that denotes the number of miles within which the search
-#           results should be restricted.
-#           Default value: 2.0
-# * sort: A boolean value indicating whether the results should be sorted by
-#         the length of the articles or not.
-#         Default value: False.
+# * Unparsed_data: A dictionary of unparsed data about a specific monster from
+#                  the DND 5e API.
 #
 # Returns
 #
-# A list of wikipedia.WikipediaPage objects that match the search parameters.
-# If no results are found, a blank list (`[]`) is returned.
-#
+# A new dictionary of specific usable information about a monster.
 #
 def create_parsed_monster_data_dictionary(unparsed_data):
     parsed_data = json.loads(unparsed_data)
-    # print(parsed_data)
     parsed_dict = {'name': parsed_data['name'],
                    'creature-type': parsed_data['type'],
                    'speeds': parsed_data['speed'],
@@ -86,6 +71,18 @@ def create_parsed_monster_data_dictionary(unparsed_data):
 
     return parsed_dict
 
+
+# monster_search(monster)
+#
+# Parameters
+
+# * monster: The unformated name of a monster.
+#
+# Returns
+#
+# A translated dictionary of usable information about a monster to be
+# adapted to the HTML.
+#
 def monster_search(monster):
     url = create_dnd_api_url(monster)
     data = get_api_data(url)
@@ -246,25 +243,61 @@ def monster_search(monster):
 
     vulnerabilities = worked_data['vulnerable']
     if len(vulnerabilities) != 0:
-        results['Damage Vulnerabilities'] = str(vulnerabilities[0]).capitalize()
+        if len(vulnerabilities) == 1:
+            results['Damage Vulnerabilities'] = str(vulnerabilities[0]).capitalize()
+        else:
+            vulnerable_str = ''
+            final_word = vulnerabilities[-1]
+            final_word_str = 'and ' + str(final_word).capitalize()
+            vulnerabilities.remove(final_word)
+            for vulnerability in vulnerabilities:
+                vulnerable_str = vulnerable_str + str(vulnerability).capitalize() + ', '
+            results['Damage Vulnerabilities'] = vulnerable_str + final_word_str
     else:
         results['Damage Vulnerabilities'] = 'None'
 
     resistances = worked_data['resistant']
     if len(resistances) != 0:
-        results['Damage Resistances'] = str(resistances[0]).capitalize()
+        if len(resistances) == 1:
+            results['Damage Resistances'] = str(resistances[0]).capitalize()
+        else:
+            resist_str = ''
+            final_word = resistances[-1]
+            final_word_str = 'and ' + str(final_word).capitalize()
+            resistances.remove(final_word)
+            for resistance in resistances:
+                resist_str = resist_str + str(resistance).capitalize() + ', '
+            results['Damage Resistances'] = resist_str + final_word_str
     else:
         results['Damage Resistances'] = 'None'
 
     damage_immunities = worked_data['dmg-immune']
     if len(damage_immunities) != 0:
-        results['Damage Immunities'] = str(damage_immunities[0]).capitalize()
+        if len(damage_immunities) == 1:
+            results['Damage Immunities'] = str(damage_immunities[0]).capitalize()
+        else:
+            dmg_immune_str = ''
+            final_word = damage_immunities[-1]
+            final_word_str = 'and ' + str(final_word).capitalize()
+            damage_immunities.remove(final_word)
+            for immunity in damage_immunities:
+                dmg_immune_str = dmg_immune_str + str(immunity).capitalize() + ', '
+            results['Damage Immunities'] = dmg_immune_str + final_word_str
     else:
         results['Damage Immunities'] = 'None'
 
     condition_immunities = worked_data['condition-immune']
     if len(condition_immunities) != 0:
-        results['Condition Immunities'] = str(condition_immunities[0]).capitalize()
+        if len(condition_immunities) == 1:
+            results['Condition Immunities'] = str(condition_immunities[0]).capitalize()
+        else:
+            con_immune_str = ''
+            final_word = condition_immunities[-1]
+            final_word_str = 'and ' + str(final_word).capitalize()
+            condition_immunities.remove(final_word)
+            for immunity in condition_immunities:
+                con_immune_str = con_immune_str + str(immunity).capitalize() + ', '
+            results['Condition Immunities'] = con_immune_str + final_word_str
     else:
         results['Condition Immunities'] = 'None'
 
@@ -280,22 +313,17 @@ def monster_search(monster):
             for ability in abilities:
                 abilities_str = abilities_str + ability + ', '
             results['Abilities'] = abilities_str + final_ability_str
-
+    print(results)
     return results
 
 
 
-## Code to test your function follows follows
 def main():
-    '''url = create_dnd_api_url('animated armor')
-    data = get_api_data(url)
-    parsed_data = create_parsed_monster_data_dictionary(data)
-    print(parsed_data)'''
-    print(monster_search('adult black dragon'))
+    pass
 
 
 if __name__ == "__main__":
     try:
         main()
     except (NameError, SyntaxError):
-        pass 
+        pass
